@@ -25,6 +25,10 @@ class StationBase(BaseModel):
 class StationCreate(StationBase):
     station_id: int
 
+# Схема для обновления
+class StationUpdate(StationBase):
+    pass
+
 # Схема для чтения (ответа API)
 class Station(StationBase):
     id: int
