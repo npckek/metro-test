@@ -1,12 +1,17 @@
-import { Button } from "./components/ui/button";
+// frontend/src/App.tsx
+import StationList from './components/StationList';
 
 function App() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <h1 className="text-3xl font-bold text-gray-800">
-        Metro Dashboard Frontend
-      </h1>
-      <Button>Click me</Button>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm p-4 border-b">
+        <h1 className="text-xl font-bold text-gray-800">
+          Metro API Dashboard
+        </h1>
+      </header>
+      <main className="p-4">
+        <StationList />
+      </main>
     </div>
   );
 }
