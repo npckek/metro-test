@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.core.db import Base, engine
 from app.services.data_loader import load_data_from_geojson
-from app.models import station
+from app.routers import stations
 
 # Создаем контекстный менеджер для событий жизненного цикла
 @asynccontextmanager
@@ -18,6 +18,4 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan, title="Metro API") 
 
-@app.get("/")
-def read_root():
-    return {"message": "Metro API is running. Data loaded successfully."}
+app.include_router(stations.router, prefix="/api/v1", tags=["stations"])
