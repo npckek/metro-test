@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String, Float, ARRAY
+from sqlalchemy import Column, Integer, String, Float, ARRAY, DECIMAL
+from sqlalchemy.orm import Mapped, mapped_column
 from app.core.db import Base
+import decimal 
 
 class MetroStation(Base):
     __tablename__ = "metro_stations"
@@ -24,4 +26,6 @@ class MetroStation(Base):
     exit_cnt_19 = Column(Float)
 
     geometry_type = Column(String)
-    coordinates = Column(ARRAY(Float))
+    coordinates: Mapped[list[decimal.Decimal]] = mapped_column(
+        ARRAY(DECIMAL(precision=30, scale=18))
+    )
