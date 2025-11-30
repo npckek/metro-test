@@ -27,5 +27,5 @@ class MetroStation(Base):
 
     geometry_type = Column(String)
     coordinates: Mapped[list[decimal.Decimal]] = mapped_column(
-        ARRAY(DECIMAL(precision=30, scale=18))
+        ARRAY(DECIMAL(precision=30, scale=15))
     )
