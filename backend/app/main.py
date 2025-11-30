@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.core.db import Base, engine
 from app.services.data_loader import load_data_from_geojson
+from app.services.user_initializer import create_initial_superuser
 from app.routers import stations
 
 # Создаем контекстный менеджер для событий жизненного цикла
@@ -13,6 +14,9 @@ async def lifespan(app: FastAPI):
 
     # Загрузка данных
     load_data_from_geojson()
+
+    # 2. Инициализация суперадмина
+    create_initial_superuser()
 
     yield
 
