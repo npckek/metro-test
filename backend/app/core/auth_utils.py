@@ -1,14 +1,11 @@
 from typing import Annotated
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from app.core.db import get_db
 from app.models.user import AdminUser
 from app.core.security import verify_password, decode_access_token
 from app.schemas.auth import UserInDB
 
-# Схема OAuth2PasswordBearer указывает, где ожидать токен
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
 
 def authenticate_user(db: Session, email: str, password: str) -> AdminUser | None:
     """Проверяет учетные данные пользователя."""
@@ -42,7 +39,18 @@ def get_user_from_token(db: Session, token: str) -> UserInDB:
     # 3. Возвращаем схему пользователя
     return UserInDB.model_validate(user)
 
-def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)) -> UserInDB:
+def get_token_from_cookie(request: Request) -> str:
+    """Извлекает токен из HTTP-Only куки."""
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Требуется аутентификация (токен отсутствует в куках)",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return token
+
+def get_current_user(token: Annotated[str, Depends(get_token_from_cookie)], db: Session = Depends(get_db)) -> UserInDB:
     """Зависимость, которая возвращает текущего активного пользователя."""
     user = get_user_from_token(db, token)
     if not user.is_active:
