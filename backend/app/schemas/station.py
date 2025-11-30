@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_serializer
 from typing import List, Any
+import decimal
 
 class StationBase(BaseModel):
     station_name: str
@@ -18,7 +19,7 @@ class StationBase(BaseModel):
     exit_cnt_18: float
     exit_cnt_19: float
     geometry_type: str
-    coordinates: List[float] 
+    coordinates: List[Any]
 
 # Схема для создания 
 class StationCreate(StationBase):
@@ -28,6 +29,17 @@ class StationCreate(StationBase):
 class Station(StationBase):
     id: int
     station_id: int
-
+    coordinates: List[Any] 
+    
+    @field_serializer('coordinates')
+    def serialize_coords(self, coords: List[Any]) -> List[str]:
+        result = []
+        for c in coords:
+            if isinstance(c, decimal.Decimal):
+                result.append(str(c))
+            else:
+                result.append(f"{c}") 
+        return result
+        
     class Config:
         from_attributes = True
