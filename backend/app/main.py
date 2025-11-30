@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from app.core.db import Base, engine
 from app.services.data_loader import load_data_from_geojson
 from app.services.user_initializer import create_initial_superuser
-from app.routers import stations
+from app.routers import stations, auth
+
 
 # Создаем контекстный менеджер для событий жизненного цикла
 @asynccontextmanager
@@ -38,3 +39,4 @@ app.add_middleware(
 )
 
 app.include_router(stations.router, prefix="/api/v1", tags=["stations"])
+app.include_router(auth.router, prefix="/api/v1")
