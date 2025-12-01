@@ -27,36 +27,84 @@ const AdminStationForm: React.FC<Props> = ({
   const isEditing = Boolean(station);
 
   const createInitialForm = (station?: Station | null): StationCreate => ({
-  id: station?.id ?? 0,
-  station_id: station?.station_id ?? 0,
-  station_name: station?.station_name ?? "",
-  transport_type: station?.transport_type ?? "",
-  start_line_id: station?.start_line_id ?? 1,
-  geometry_type: station?.geometry_type ?? "Point",
-  coordinates: station?.coordinates ?? ["0", "0"],
+    id: station?.id ?? 0,
+    station_id: station?.station_id ?? 0,
+    station_name: station?.station_name ?? "",
+    transport_type: station?.transport_type ?? "",
+    start_line_id: station?.start_line_id ?? 1,
+    geometry_type: station?.geometry_type ?? "Point",
+    coordinates: station?.coordinates ?? ["0", "0"],
 
-  entrance_cnt_7: station?.entrance_cnt_7 ?? 0,
-  entrance_cnt_8: station?.entrance_cnt_8 ?? 0,
-  entrance_cnt_9: station?.entrance_cnt_9 ?? 0,
-  entrance_cnt_17: station?.entrance_cnt_17 ?? 0,
-  entrance_cnt_18: station?.entrance_cnt_18 ?? 0,
-  entrance_cnt_19: station?.entrance_cnt_19 ?? 0,
+    entrance_cnt_7: station?.entrance_cnt_7 ?? 0,
+    entrance_cnt_8: station?.entrance_cnt_8 ?? 0,
+    entrance_cnt_9: station?.entrance_cnt_9 ?? 0,
+    entrance_cnt_17: station?.entrance_cnt_17 ?? 0,
+    entrance_cnt_18: station?.entrance_cnt_18 ?? 0,
+    entrance_cnt_19: station?.entrance_cnt_19 ?? 0,
 
-  exit_cnt_7: station?.exit_cnt_7 ?? 0,
-  exit_cnt_8: station?.exit_cnt_8 ?? 0,
-  exit_cnt_9: station?.exit_cnt_9 ?? 0,
-  exit_cnt_17: station?.exit_cnt_17 ?? 0,
-  exit_cnt_18: station?.exit_cnt_18 ?? 0,
-  exit_cnt_19: station?.exit_cnt_19 ?? 0,
-});
+    exit_cnt_7: station?.exit_cnt_7 ?? 0,
+    exit_cnt_8: station?.exit_cnt_8 ?? 0,
+    exit_cnt_9: station?.exit_cnt_9 ?? 0,
+    exit_cnt_17: station?.exit_cnt_17 ?? 0,
+    exit_cnt_18: station?.exit_cnt_18 ?? 0,
+    exit_cnt_19: station?.exit_cnt_19 ?? 0,
+  });
 
-  const [form, setForm] = useState<StationCreate>(() => createInitialForm(station));
+  const [form, setForm] = useState<StationCreate>(() =>
+    createInitialForm(station)
+  );
 
   useEffect(() => {
-  if (open) {
-    setForm(createInitialForm(station));
-  }
-}, [open, station]);
+    if (open) {
+      setForm(createInitialForm(station));
+    }
+  }, [open, station]);
+
+  const validateForm = (form: StationCreate): string | null => {
+    if (!form.station_id || form.station_id <= 0) {
+      return "ID станции должен быть положительным числом.";
+    }
+
+    if (!form.station_name.trim()) {
+      return "Название станции не может быть пустым.";
+    }
+
+    if (!form.transport_type.trim()) {
+      return "Тип транспорта обязателен.";
+    }
+
+    if (
+      !form.coordinates ||
+      form.coordinates.length !== 2 ||
+      form.coordinates.some((c) => isNaN(Number(c)))
+    ) {
+      return "Координаты должны содержать два корректных числа.";
+    }
+
+    const numericFields = [
+      "entrance_cnt_7",
+      "entrance_cnt_8",
+      "entrance_cnt_9",
+      "entrance_cnt_17",
+      "entrance_cnt_18",
+      "entrance_cnt_19",
+      "exit_cnt_7",
+      "exit_cnt_8",
+      "exit_cnt_9",
+      "exit_cnt_17",
+      "exit_cnt_18",
+      "exit_cnt_19",
+    ] as (keyof StationCreate)[];
+
+    for (const key of numericFields) {
+      const value = Number(form[key] as number);
+      if (value < 0 || Number.isNaN(value)) {
+        return `Поле "${key}" должно быть числом ≥ 0.`;
+      }
+    }
+
+    return null;
+  };
 
   const handleChange = (field: keyof StationCreate, value: string | number) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -108,7 +156,13 @@ const AdminStationForm: React.FC<Props> = ({
     </>
   );
 
-  const handleSubmit = async () => {
+   const handleSubmit = async () => {
+    const error = validateForm(form);
+    if (error) {
+      alert(error);
+      return;
+    }
+
     try {
       if (isEditing) {
         await updateStation(form.station_id, form as StationUpdate);
