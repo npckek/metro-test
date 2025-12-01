@@ -26,33 +26,37 @@ const AdminStationForm: React.FC<Props> = ({
 }) => {
   const isEditing = Boolean(station);
 
-  const [form, setForm] = useState<StationCreate>({
-    id: station?.id ?? 0,
-    station_id: station?.station_id ?? 0,
-    station_name: station?.station_name ?? "",
-    transport_type: station?.transport_type ?? "",
-    start_line_id: station?.start_line_id ?? 1,
-    geometry_type: station?.geometry_type ?? "Point",
-    coordinates: station?.coordinates ?? ["0", "0"],
+  const createInitialForm = (station?: Station | null): StationCreate => ({
+  id: station?.id ?? 0,
+  station_id: station?.station_id ?? 0,
+  station_name: station?.station_name ?? "",
+  transport_type: station?.transport_type ?? "",
+  start_line_id: station?.start_line_id ?? 1,
+  geometry_type: station?.geometry_type ?? "Point",
+  coordinates: station?.coordinates ?? ["0", "0"],
 
-    entrance_cnt_7: station?.entrance_cnt_7 ?? 0,
-    entrance_cnt_8: station?.entrance_cnt_8 ?? 0,
-    entrance_cnt_9: station?.entrance_cnt_9 ?? 0,
-    entrance_cnt_17: station?.entrance_cnt_17 ?? 0,
-    entrance_cnt_18: station?.entrance_cnt_18 ?? 0,
-    entrance_cnt_19: station?.entrance_cnt_19 ?? 0,
+  entrance_cnt_7: station?.entrance_cnt_7 ?? 0,
+  entrance_cnt_8: station?.entrance_cnt_8 ?? 0,
+  entrance_cnt_9: station?.entrance_cnt_9 ?? 0,
+  entrance_cnt_17: station?.entrance_cnt_17 ?? 0,
+  entrance_cnt_18: station?.entrance_cnt_18 ?? 0,
+  entrance_cnt_19: station?.entrance_cnt_19 ?? 0,
 
-    exit_cnt_7: station?.exit_cnt_7 ?? 0,
-    exit_cnt_8: station?.exit_cnt_8 ?? 0,
-    exit_cnt_9: station?.exit_cnt_9 ?? 0,
-    exit_cnt_17: station?.exit_cnt_17 ?? 0,
-    exit_cnt_18: station?.exit_cnt_18 ?? 0,
-    exit_cnt_19: station?.exit_cnt_19 ?? 0,
-  });
+  exit_cnt_7: station?.exit_cnt_7 ?? 0,
+  exit_cnt_8: station?.exit_cnt_8 ?? 0,
+  exit_cnt_9: station?.exit_cnt_9 ?? 0,
+  exit_cnt_17: station?.exit_cnt_17 ?? 0,
+  exit_cnt_18: station?.exit_cnt_18 ?? 0,
+  exit_cnt_19: station?.exit_cnt_19 ?? 0,
+});
+
+  const [form, setForm] = useState<StationCreate>(() => createInitialForm(station));
 
   useEffect(() => {
-    if (station) setForm(station);
-  }, [station]);
+  if (open) {
+    setForm(createInitialForm(station));
+  }
+}, [open, station]);
 
   const handleChange = (field: keyof StationCreate, value: string | number) => {
     setForm((prev) => ({ ...prev, [field]: value }));
