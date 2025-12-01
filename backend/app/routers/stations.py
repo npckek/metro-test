@@ -16,7 +16,7 @@ def read_stations(db: Session = Depends(get_db)):
     """
     Возвращает список всех станций метро.
     """
-    stations = db.query(MetroStation).all()
+    stations = db.query(MetroStation).order_by(MetroStation.id).all()
     return stations
 
 # --- Административные маршруты ---
