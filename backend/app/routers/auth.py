@@ -16,7 +16,6 @@ def login_for_access_token(
     response: Response,
     db: Session = Depends(get_db)
 ):
-    # 1. Аутентификация
     user = authenticate_user(db, form_data.email, form_data.password)
 
     if not user:
@@ -26,7 +25,6 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    # 2. Создание токена
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"email": user.email, "id": user.id},
@@ -37,12 +35,11 @@ def login_for_access_token(
         key="access_token", 
         value=access_token, 
         httponly=True, 
-        secure=False, # Измените на True для HTTPS в продакшене
+        secure=False,
         samesite="lax",
         expires=access_token_expires
     )
 
-    # Возвращаем пустой ответ или минимальный JSON
     return {"message": "Успешный вход"}
 
 @router.post("/logout", summary="Выход администратора (удаление JWT)")

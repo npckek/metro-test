@@ -21,15 +21,12 @@ class StationBase(BaseModel):
     geometry_type: str
     coordinates: List[Any]
 
-# Схема для создания 
 class StationCreate(StationBase):
     station_id: int
 
-# Схема для обновления
 class StationUpdate(StationBase):
     pass
 
-# Схема для чтения (ответа API)
 class Station(StationBase):
     id: int
     station_id: int

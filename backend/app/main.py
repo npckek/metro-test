@@ -6,17 +6,13 @@ from app.services.user_initializer import create_initial_superuser
 from app.routers import stations, auth
 
 
-# Создаем контекстный менеджер для событий жизненного цикла
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Создание таблиц (если они не существуют)
     print("INFO: Creating database tables...")
     Base.metadata.create_all(bind=engine)
 
-    # Загрузка данных
     load_data_from_geojson()
 
-    # 2. Инициализация суперадмина
     create_initial_superuser()
 
     yield
@@ -26,8 +22,8 @@ app = FastAPI(lifespan=lifespan, title="Metro API")
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
-    "http://localhost:5173",   # Vite
-    "http://localhost",        # общий
+    "http://localhost:5173",  
+    "http://localhost",       
 ]
 
 app.add_middleware(

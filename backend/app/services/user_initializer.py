@@ -1,5 +1,3 @@
-# app/services/user_initializer.py
-
 import os
 from sqlalchemy.orm import Session
 from app.models.user import AdminUser
@@ -17,13 +15,11 @@ def create_initial_superuser():
         db.close()
         return
 
-    # Проверяем, существует ли пользователь с такой почтой
     existing_user = db.query(AdminUser).filter(AdminUser.email == admin_email).first()
 
     if not existing_user:
         hashed_password = get_password_hash(admin_password)
 
-        # Создаем нового пользователя-суперадмина
         superuser = AdminUser(
             email=admin_email,
             hashed_password=hashed_password,

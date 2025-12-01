@@ -28,7 +28,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    to_encode.update({"exp": expire, "sub": "access"}) # 'sub' (subject) для токена
+    to_encode.update({"exp": expire, "sub": "access"}) 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -38,5 +38,4 @@ def decode_access_token(token: str) -> dict:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
     except JWTError:
-        # Возвращаем пустой payload или возбуждаем ошибку, если токен невалиден
         return {}

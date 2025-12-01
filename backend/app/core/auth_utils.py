@@ -24,19 +24,16 @@ def get_user_from_token(db: Session, token: str) -> UserInDB:
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    # 1. Декодируем токен
     payload = decode_access_token(token)
     if not payload or "email" not in payload:
         raise credentials_exception
 
     email: str = payload.get("email")
 
-    # 2. Ищем пользователя в БД по email из токена
     user = db.query(AdminUser).filter(AdminUser.email == email).first()
     if user is None:
         raise credentials_exception
 
-    # 3. Возвращаем схему пользователя
     return UserInDB.model_validate(user)
 
 def get_token_from_cookie(request: Request) -> str:
@@ -57,7 +54,6 @@ def get_current_user(token: Annotated[str, Depends(get_token_from_cookie)], db: 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неактивный пользователь")
     return user
 
-# Зависимость, требующая прав суперадмина (для защиты CRUD-роутов)
 def get_current_superuser(current_user: Annotated[UserInDB, Depends(get_current_user)]):
     if not current_user.is_superuser:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Недостаточно прав")
