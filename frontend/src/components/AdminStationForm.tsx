@@ -8,10 +8,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-
 import type { Station, StationCreate, StationUpdate } from "@/types/station";
 import { createStation, updateStation } from "@/api/adminApi";
-import { Separator } from "@radix-ui/react-separator";
 
 interface Props {
   open: boolean;
@@ -36,12 +34,14 @@ const AdminStationForm: React.FC<Props> = ({
     start_line_id: station?.start_line_id ?? 1,
     geometry_type: station?.geometry_type ?? "Point",
     coordinates: station?.coordinates ?? ["0", "0"],
+
     entrance_cnt_7: station?.entrance_cnt_7 ?? 0,
     entrance_cnt_8: station?.entrance_cnt_8 ?? 0,
     entrance_cnt_9: station?.entrance_cnt_9 ?? 0,
     entrance_cnt_17: station?.entrance_cnt_17 ?? 0,
     entrance_cnt_18: station?.entrance_cnt_18 ?? 0,
     entrance_cnt_19: station?.entrance_cnt_19 ?? 0,
+
     exit_cnt_7: station?.exit_cnt_7 ?? 0,
     exit_cnt_8: station?.exit_cnt_8 ?? 0,
     exit_cnt_9: station?.exit_cnt_9 ?? 0,
@@ -50,30 +50,65 @@ const AdminStationForm: React.FC<Props> = ({
     exit_cnt_19: station?.exit_cnt_19 ?? 0,
   });
 
-  // Обновляем форму при передаче новой станции
   useEffect(() => {
-    if (station) {
-      setForm(station);
-    }
+    if (station) setForm(station);
   }, [station]);
 
-  const handleChange = (field: string, value: string | number) => {
-    setForm({ ...form, [field]: value });
+  const handleChange = (field: keyof StationCreate, value: string | number) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleCoordChange = (index: number, value: string) => {
-    const newCoords = [...form.coordinates];
-    newCoords[index] = value;
-    setForm({ ...form, coordinates: newCoords });
+    const coords = [...form.coordinates];
+    coords[index] = value;
+    setForm((prev) => ({ ...prev, coordinates: coords }));
   };
+
+  const entranceKeys: (keyof StationCreate)[] = [
+    "entrance_cnt_7",
+    "entrance_cnt_8",
+    "entrance_cnt_9",
+    "entrance_cnt_17",
+    "entrance_cnt_18",
+    "entrance_cnt_19",
+  ];
+
+  const exitKeys: (keyof StationCreate)[] = [
+    "exit_cnt_7",
+    "exit_cnt_8",
+    "exit_cnt_9",
+    "exit_cnt_17",
+    "exit_cnt_18",
+    "exit_cnt_19",
+  ];
+
+  const renderNumberGroup = (label: string, keys: (keyof StationCreate)[]) => (
+    <>
+      <h3 className="font-semibold">{label}</h3>
+
+      <div className="grid grid-cols-3 gap-3">
+        {keys.map((key) => {
+          const hour = key.match(/\d+/)?.[0] ?? key;
+          return (
+            <div key={key}>
+              <Label>{hour}</Label>
+              <Input
+                type="number"
+                value={form[key]}
+                onChange={(e) => handleChange(key, Number(e.target.value))}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
 
   const handleSubmit = async () => {
     try {
       if (isEditing) {
-        // UPDATE
         await updateStation(form.station_id, form as StationUpdate);
       } else {
-        // CREATE
         await createStation(form as StationCreate);
       }
 
@@ -94,35 +129,41 @@ const AdminStationForm: React.FC<Props> = ({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid gap-4">
-          <div>
-            <Label>ID Станции</Label>
-            <Input
-              type="number"
-              value={form.station_id}
-              onChange={(e) =>
-                handleChange("station_id", Number(e.target.value))
-              }
-            />
+        <div className="grid gap-5 py-2">
+          {/* Базовая информация */}
+          <div className="grid gap-3">
+            <div>
+              <Label>ID станции</Label>
+              <Input
+                type="number"
+                value={form.station_id}
+                onChange={(e) =>
+                  handleChange("station_id", Number(e.target.value))
+                }
+              />
+            </div>
+
+            <div>
+              <Label>Название</Label>
+              <Input
+                value={form.station_name}
+                onChange={(e) => handleChange("station_name", e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label>Тип транспорта</Label>
+              <Input
+                value={form.transport_type}
+                onChange={(e) => handleChange("transport_type", e.target.value)}
+              />
+            </div>
           </div>
 
-          <div>
-            <Label>Название</Label>
-            <Input
-              value={form.station_name}
-              onChange={(e) => handleChange("station_name", e.target.value)}
-            />
-          </div>
+          {/* Координаты */}
+          <h3 className="font-semibold">Координаты</h3>
 
-          <div>
-            <Label>Тип транспорта</Label>
-            <Input
-              value={form.transport_type}
-              onChange={(e) => handleChange("transport_type", e.target.value)}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <Label>X</Label>
               <Input
@@ -138,139 +179,13 @@ const AdminStationForm: React.FC<Props> = ({
               />
             </div>
           </div>
-        <Separator className="my-2" />
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <Label>Вход 7</Label>
-              <Input
-                type="number"
-                value={form.entrance_cnt_7}
-                onChange={(e) =>
-                  handleChange("entrance_cnt_7", Number(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label>Вход 8</Label>
-              <Input
-                type="number"
-                value={form.entrance_cnt_8}
-                onChange={(e) =>
-                  handleChange("entrance_cnt_8", Number(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label>Вход 9</Label>
-              <Input
-                type="number"
-                value={form.entrance_cnt_9}
-                onChange={(e) =>
-                  handleChange("entrance_cnt_9", Number(e.target.value))
-                }
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <Label>Вход 17</Label>
-              <Input
-                type="number"
-                value={form.entrance_cnt_17}
-                onChange={(e) =>
-                  handleChange("entrance_cnt_17", Number(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label>Вход 18</Label>
-              <Input
-                type="number"
-                value={form.entrance_cnt_18}
-                onChange={(e) =>
-                  handleChange("entrance_cnt_18", Number(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label>Вход 19</Label>
-              <Input
-                type="number"
-                value={form.entrance_cnt_19}
-                onChange={(e) =>
-                  handleChange("entrance_cnt_19", Number(e.target.value))
-                }
-              />
-            </div>
-          </div>
-          <Separator className="my-2" />
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <Label>Выход 7</Label>
-              <Input
-                type="number"
-                value={form.exit_cnt_7}
-                onChange={(e) =>
-                  handleChange("exit_cnt_7", Number(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label>Выход 8</Label>
-              <Input
-                type="number"
-                value={form.exit_cnt_8}
-                onChange={(e) =>
-                  handleChange("exit_cnt_8", Number(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label>Выход 9</Label>
-              <Input
-                type="number"
-                value={form.exit_cnt_9}
-                onChange={(e) =>
-                  handleChange("exit_cnt_9", Number(e.target.value))
-                }
-              />
-            </div>
-          </div>
 
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <Label>Выход 17</Label>
-              <Input
-                type="number"
-                value={form.exit_cnt_17}
-                onChange={(e) =>
-                  handleChange("exit_cnt_17", Number(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label>Выход 18</Label>
-              <Input
-                type="number"
-                value={form.exit_cnt_18}
-                onChange={(e) =>
-                  handleChange("exit_cnt_18", Number(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label>Выход 19</Label>
-              <Input
-                type="number"
-                value={form.exit_cnt_19}
-                onChange={(e) =>
-                  handleChange("exit_cnt_19", Number(e.target.value))
-                }
-              />
-            </div>
-          </div>
+          {/* Блоки входов/выходов */}
+          {renderNumberGroup("Входы", entranceKeys)}
+          {renderNumberGroup("Выходы", exitKeys)}
 
-          <Button onClick={handleSubmit} className="w-full">
+          {/* Кнопка */}
+          <Button onClick={handleSubmit} className="w-full mt-4">
             {isEditing ? "Сохранить изменения" : "Создать станцию"}
           </Button>
         </div>
