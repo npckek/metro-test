@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import React, { Suspense } from "react";
-import StationShowcase from './components/StationList';
+import Showcase from './pages/Showcase';
 import LoginPage from './pages/LoginPage';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -13,7 +13,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<StationShowcase />} />
+          <Route path="/" element={<Showcase />} />
 
           <Route path="/login" element={<LoginPage />} />
 

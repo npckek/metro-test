@@ -1,35 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { getStations } from '@/api/stations';
 import type { Station } from '@/types/station';
 import { Loader2 } from 'lucide-react';
 import AdminStationForm from "./AdminStationForm";
 import { deleteStation } from "@/api/adminApi";
+import { useLoadStations } from "@/hooks/useLoadStations";
 
 const AdminStationList: React.FC = () => {
-    const [stations, setStations] = useState<Station[]>([]);
     const [openForm, setOpenForm] = useState(false);
     const [editingStation, setEditingStation] = useState<Station | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const loadStations = async () => {
-      setLoading(true);
-      try {
-        const data = await getStations();
-        setStations(data);
-      } catch (err) {
-        console.error("Error loading stations for admin:", err);
-        setError("Не удалось загрузить данные станций. Убедитесь, что вы авторизованы.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    useEffect(() => {
-        loadStations();
-    }, []);
+    const { stations, loading, error, reload } = useLoadStations();
 
     if (loading) {
         return (
@@ -55,7 +36,7 @@ const AdminStationList: React.FC = () => {
                     open={openForm}
                     onClose={() => setOpenForm(false)}
                     station={editingStation}
-                    onSaved={loadStations}
+                    onSaved={reload}
                 /> 
             
             <div className="overflow-x-auto rounded-md border">
@@ -105,7 +86,7 @@ const AdminStationList: React.FC = () => {
                                     if (!ok) return;
 
                                     await deleteStation(station.station_id);
-                                    loadStations();
+                                    reload();
                                     }}
                                 >
                                     Удалить

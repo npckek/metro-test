@@ -1,13 +1,11 @@
-// frontend/src/pages/LoginPage.tsx
-
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -43,9 +41,6 @@ const LoginPage: React.FC = () => {
       <Card className="w-[350px]">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">Вход для Администратора</CardTitle>
-          <CardDescription>
-            Введите email и пароль для доступа к панели управления.
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
@@ -78,6 +73,9 @@ const LoginPage: React.FC = () => {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Загрузка...' : 'Войти'}
             </Button>
+            <Link to="/">
+            Вернутся к ветрине
+            </Link>
           </form>
         </CardContent>
       </Card>

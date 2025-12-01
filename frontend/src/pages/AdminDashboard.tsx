@@ -1,12 +1,24 @@
 import React from 'react';
 import AdminStationList from '@/components/AdminStationList';
+import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/components/ui/button";
 
 const AdminDashboardPage: React.FC = () => {
+  const { logout } = useAuth();
+
   return (
-      <div className="p-8">
-        <h1 className="text-3xl font-bold mb-6">Панель Администратора</h1>
-        <AdminStationList />
+    <div className="p-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Панель Администратора</h1>
+
+        {/* Кнопка выхода */}
+        <Button variant="destructive" onClick={logout}>
+          Выйти
+        </Button>
       </div>
+
+      <AdminStationList />
+    </div>
   );
 };
 

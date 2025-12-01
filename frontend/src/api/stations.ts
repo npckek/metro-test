@@ -29,7 +29,7 @@ export const checkAuthStatus = async (): Promise<boolean> => {
     // Вызов защищенного роута. Если кука валидна, получим 200.
     await apiClient.get('/auth/status'); 
     return true;
-  } catch (error) {
+  } catch {
     // Если кука отсутствует или невалидна, FastAPI вернет 401, и Axios бросит ошибку.
     return false;
   }
