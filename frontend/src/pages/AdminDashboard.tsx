@@ -1,15 +1,13 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import AdminStationList from '@/components/AdminStationList';
 
-const AdminDashboard: React.FC = () => {
+const AdminDashboardPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold mb-6">Панель Управления Станциями</h1>
-      <Card className="p-6">
-        <p>Здесь будет интерфейс для создания, редактирования и удаления станций.</p>
-      </Card>
-    </div>
+      <div className="p-8">
+        <h1 className="text-3xl font-bold mb-6">Панель Администратора</h1>
+        <AdminStationList />
+      </div>
   );
 };
 
-export default AdminDashboard;
+export default AdminDashboardPage;
