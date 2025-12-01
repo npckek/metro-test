@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from typing import List
 from app.core.db import get_db
 from app.models.station import MetroStation
@@ -42,8 +43,12 @@ def create_station(
     db_station = MetroStation(**station.model_dump(exclude={"coordinates"}), coordinates=precise_coordinates)
 
     db.add(db_station)
-    db.commit()
-    db.refresh(db_station)
+    try:
+        db.commit()
+        db.refresh(db_station)
+    except SQLAlchemyError as exc:
+        db.rollback()
+        raise HTTPException(500, f"Ошибка базы данных при создании: {str(exc)}")
     return db_station
 
 # 2. ЧТЕНИЕ
@@ -82,8 +87,12 @@ def update_station(
         else:
             setattr(db_station, key, value)
 
-    db.commit()
-    db.refresh(db_station)
+    try:
+        db.commit()
+        db.refresh(db_station)
+    except SQLAlchemyError as exc:
+        db.rollback()
+        raise HTTPException(500, f"Ошибка базы данных при обновлении: {str(exc)}")
     return db_station
 
 # 4. УДАЛЕНИЕ (DELETE)
@@ -99,5 +108,9 @@ def delete_station(
         raise HTTPException(status_code=404, detail="Станция не найдена")
 
     db.delete(db_station)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError as exc:
+        db.rollback()
+        raise HTTPException(500, f"Ошибка базы данных при удалении: {str(exc)}")
     return None # 204 No Content
