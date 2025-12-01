@@ -216,6 +216,13 @@ const AdminStationForm: React.FC<Props> = ({
                 onChange={(e) => handleChange("transport_type", e.target.value)}
               />
             </div>
+            <div>
+              <Label>Номер линии</Label>
+              <Input
+                value={form.start_line_id}
+                onChange={(e) => handleChange("start_line_id", e.target.value)}
+              />
+            </div>
           </div>
 
           {/* Координаты */}

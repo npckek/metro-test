@@ -46,6 +46,7 @@ const AdminStationList: React.FC = () => {
                             <TableHead className="w-20">ID Станции</TableHead>
                             <TableHead>Название</TableHead>
                             <TableHead>Тип</TableHead>
+                            <TableHead>Линия</TableHead>
                             <TableHead>Координаты</TableHead>
                             <TableHead className="text-center">Входы 7-9 ч.</TableHead>
                             <TableHead className="text-center">Входы 17-19 ч.</TableHead>
@@ -57,10 +58,11 @@ const AdminStationList: React.FC = () => {
                     <TableBody>
                         {stations.map((station) => (
                             <TableRow key={station.id}>
-                                <TableCell>{station.id}</TableCell>
+                                {/* <TableCell>{station.id}</TableCell> */}
                                 <TableCell>{station.station_id}</TableCell>
                                 <TableCell>{station.station_name}</TableCell>
                                 <TableCell>{station.transport_type}</TableCell>
+                                <TableCell>{station.start_line_id || 'N/A'}</TableCell>
                                 <TableCell>
                                     X: {station.coordinates[0] || 'N/A'}<br/> Y: {station.coordinates[1]|| 'N/A'}
                                 </TableCell>

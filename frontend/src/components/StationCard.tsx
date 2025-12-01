@@ -48,6 +48,9 @@ const StationCard: React.FC<StationCardProps> = ({ station }) => {
         <CardTitle>{station.station_name}</CardTitle>
         <CardDescription>
           {station.transport_type} (ID: {station.station_id})
+          {station.start_line_id
+            ? ` - Линия ${station.start_line_id}`
+            : ""}
         </CardDescription>
       </CardHeader>
       <CardContent className="grow">
