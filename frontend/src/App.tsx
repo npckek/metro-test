@@ -1,24 +1,34 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { Suspense } from "react";
 import StationShowcase from './components/StationList';
 import LoginPage from './pages/LoginPage';
-import AdminDashboard from './pages/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Ленивая загрузка админ-панели
+const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
 
 function App() {
   return (
     <BrowserRouter>
-    <AuthProvider>
-      <Routes>
-        {/* Публичная Витрина */}
-        <Route path="/" element={<StationShowcase />} /> 
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<StationShowcase />} />
 
-        {/* Страница Входа */}
-        <Route path="/admin/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
 
-        {/* Защищенная Админ-панель */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} /> 
-      </Routes>
-    </AuthProvider>
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<div className="p-10 text-center">Загрузка админ-панели...</div>}>
+                  <AdminDashboard />
+                </Suspense>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

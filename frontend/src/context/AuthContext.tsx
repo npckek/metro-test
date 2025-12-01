@@ -32,15 +32,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const checkStatus = async () => {
-      // 1. Проверяем, есть ли валидная кука на бэкенде
       const authenticated = await checkAuthStatus();
       
-      // 2. Устанавливаем статус
       setIsAuthenticated(authenticated);
       setIsInitializing(false); 
       
-      // 3. Если аутентифицирован И текущий путь - это страница входа, перенаправляем.
-      if (authenticated && window.location.pathname === '/admin/login') {
+      if (authenticated && window.location.pathname === '/login') {
          navigate('/admin/dashboard', { replace: true });
       }
     };
@@ -66,7 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     logoutAdmin();
     setIsAuthenticated(false);
-    navigate('/admin/login', { replace: true });
+    navigate('/login', { replace: true });
   };
 
   if (isInitializing) {
