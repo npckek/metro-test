@@ -1,7 +1,5 @@
-// frontend/src/components/StationCard.tsx
-
 import React from "react";
-import type { Station } from "@/types/station";
+import type { StationBase } from "@/types/station";
 import {
   Card,
   CardContent,
@@ -18,7 +16,7 @@ import {
 } from "@/components/ui/accordion";
 
 interface StationCardProps {
-  station: Station;
+  station: StationBase;
 }
 
 const StationCard: React.FC<StationCardProps> = ({ station }) => {

@@ -4,9 +4,13 @@ import { Button } from '@/components/ui/button';
 import { getStations } from '@/api/stations';
 import type { Station } from '@/types/station';
 import { Loader2 } from 'lucide-react';
+import AdminStationForm from "./AdminStationForm";
+import { deleteStation } from "@/api/adminApi";
 
 const AdminStationList: React.FC = () => {
     const [stations, setStations] = useState<Station[]>([]);
+    const [openForm, setOpenForm] = useState(false);
+    const [editingStation, setEditingStation] = useState<Station | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -43,8 +47,16 @@ const AdminStationList: React.FC = () => {
         <div className="space-y-4">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold">Управление Станциями ({stations.length})</h2>
-                <Button>Создать Станцию</Button>
+                <Button onClick={() => { setEditingStation(null); setOpenForm(true); }}>
+                    Создать Станцию
+                </Button>
             </div>
+                <AdminStationForm
+                    open={openForm}
+                    onClose={() => setOpenForm(false)}
+                    station={editingStation}
+                    onSaved={loadStations}
+                /> 
             
             <div className="overflow-x-auto rounded-md border">
                 <Table>
@@ -64,6 +76,7 @@ const AdminStationList: React.FC = () => {
                     <TableBody>
                         {stations.map((station) => (
                             <TableRow key={station.id}>
+                                <TableCell>{station.id}</TableCell>
                                 <TableCell>{station.station_id}</TableCell>
                                 <TableCell>{station.station_name}</TableCell>
                                 <TableCell>{station.transport_type}</TableCell>
@@ -75,8 +88,28 @@ const AdminStationList: React.FC = () => {
                                 <TableCell className="text-center">{station.exit_cnt_7}, {station.exit_cnt_8}, {station.exit_cnt_9}</TableCell>
                                 <TableCell className="text-center">{station.exit_cnt_17}, {station.exit_cnt_18}, {station.exit_cnt_19}</TableCell>
                                 <TableCell className="text-right space-x-2">
-                                  <Button variant="outline" size="sm">Редактировать</Button>
-                                  <Button variant="destructive" size="sm">Удалить</Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                        setEditingStation(station);
+                                        setOpenForm(true);
+                                    }}
+                                    >
+                                    Редактировать
+                                </Button>
+
+                                <Button
+                                    variant="destructive"
+                                    onClick={async () => {
+                                    let ok = confirm(`Вы уверены, что хотите удалить станцию №${station.station_id}?`);
+                                    if (!ok) return;
+
+                                    await deleteStation(station.station_id);
+                                    loadStations();
+                                    }}
+                                >
+                                    Удалить
+                                </Button>
                                 </TableCell>
                             </TableRow>
                         ))}

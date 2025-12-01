@@ -1,4 +1,4 @@
-export interface Station {
+export interface StationBase {
     id: number;
     station_id: number;
     station_name: string;
@@ -18,4 +18,14 @@ export interface Station {
     exit_cnt_19: number;
     geometry_type: string;
     coordinates: string[]; 
+}
+
+export interface StationCreate extends StationBase {
+  station_id: number;
+}
+
+export interface StationUpdate extends StationBase {}
+
+export interface Station extends StationCreate {
+  id: number;
 }
