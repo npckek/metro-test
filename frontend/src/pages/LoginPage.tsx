@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/context/AuthContext';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { login, isAuthenticated } = useAuth();
@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     if (isAuthenticated) {
       // Вызываем navigate только после того, как компонент отрендерился
-      navigate('/admin/dashboard', { replace: true });
+      navigate("/admin/dashboard", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -51,10 +51,10 @@ const LoginPage: React.FC = () => {
             )}
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="example@mail.com" 
+              <Input
+                id="email"
+                type="email"
+                placeholder="example@mail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -62,20 +62,18 @@ const LoginPage: React.FC = () => {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Пароль</Label>
-              <Input 
-                id="password" 
-                type="password" 
+              <Input
+                id="password"
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Загрузка...' : 'Войти'}
+              {isLoading ? "Загрузка..." : "Войти"}
             </Button>
-            <Link to="/">
-            Вернутся к ветрине
-            </Link>
+            <Link to="/">Вернутся к ветрине</Link>
           </form>
         </CardContent>
       </Card>

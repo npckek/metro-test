@@ -10,7 +10,6 @@ const StationShowcase: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-
       {/* --- Верхняя панель с кнопкой --- */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold">Витрина Станций</h2>
@@ -39,9 +38,7 @@ const StationShowcase: React.FC = () => {
       )}
 
       {/* --- Ошибка --- */}
-      {error && (
-        <div className="p-8 text-red-600 font-semibold">{error}</div>
-      )}
+      {error && <div className="p-8 text-red-600 font-semibold">{error}</div>}
 
       {/* --- Список станций --- */}
       {!loading && !error && <StationList stations={stations} />}

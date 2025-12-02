@@ -51,7 +51,7 @@ const AdminStationForm: React.FC<Props> = ({
   });
 
   const [form, setForm] = useState<StationCreate>(() =>
-    createInitialForm(station)
+    createInitialForm(station),
   );
 
   useEffect(() => {
@@ -156,7 +156,7 @@ const AdminStationForm: React.FC<Props> = ({
     </>
   );
 
-   const handleSubmit = async () => {
+  const handleSubmit = async () => {
     const error = validateForm(form);
     if (error) {
       alert(error);
