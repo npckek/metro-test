@@ -1,0 +1,24 @@
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+skip-string-normalization = false
+
+[tool.ruff]
+line-length = 88
+select = ["I", "E", "W", "F", "B", "TID", "C4", "N", "UP", "S"]
+src = ["app"] 
+ignore = ["W"]
+exclude = ["venv", ".venv", "__pycache__"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+follow_imports = "silent"
+plugins = ["pydantic.mypy"]
+files = ["app"]
