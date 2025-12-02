@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -185,6 +186,9 @@ const AdminStationForm: React.FC<Props> = ({
           <DialogTitle>
             {isEditing ? "Редактировать Станцию" : "Создать Станцию"}
           </DialogTitle>
+          <DialogDescription>
+            Заполните форму и нажмите "Сохранить".
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-5 py-2">
@@ -220,7 +224,7 @@ const AdminStationForm: React.FC<Props> = ({
               <Label>Номер линии</Label>
               <Input
                 value={form.start_line_id}
-                onChange={(e) => handleChange("start_line_id", e.target.value)}
+                onChange={(e) => handleChange("start_line_id", Number(e.target.value))}
               />
             </div>
           </div>
