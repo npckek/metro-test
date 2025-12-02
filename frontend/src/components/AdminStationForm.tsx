@@ -224,7 +224,9 @@ const AdminStationForm: React.FC<Props> = ({
               <Label>Номер линии</Label>
               <Input
                 value={form.start_line_id}
-                onChange={(e) => handleChange("start_line_id", Number(e.target.value))}
+                onChange={(e) =>
+                  handleChange("start_line_id", Number(e.target.value))
+                }
               />
             </div>
           </div>
