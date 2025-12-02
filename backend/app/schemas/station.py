@@ -1,6 +1,8 @@
-from pydantic import BaseModel, field_serializer
-from typing import List, Any
 import decimal
+from typing import Any, List
+
+from pydantic import BaseModel, field_serializer
+
 
 class StationBase(BaseModel):
     station_name: str
@@ -21,26 +23,29 @@ class StationBase(BaseModel):
     geometry_type: str
     coordinates: List[Any]
 
+
 class StationCreate(StationBase):
     station_id: int
+
 
 class StationUpdate(StationBase):
     pass
 
+
 class Station(StationBase):
     id: int
     station_id: int
-    coordinates: List[Any] 
-    
-    @field_serializer('coordinates')
+    coordinates: List[Any]
+
+    @field_serializer("coordinates")
     def serialize_coords(self, coords: List[Any]) -> List[str]:
         result = []
         for c in coords:
             if isinstance(c, decimal.Decimal):
                 result.append(str(c))
             else:
-                result.append(f"{c}") 
+                result.append(f"{c}")
         return result
-        
+
     class Config:
         from_attributes = True

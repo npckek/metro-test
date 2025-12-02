@@ -1,9 +1,12 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.core.db import Base, engine
+from app.routers import auth, stations
 from app.services.data_loader import load_data_from_geojson
 from app.services.user_initializer import create_initial_superuser
-from app.routers import stations, auth
 
 
 @asynccontextmanager
@@ -17,13 +20,13 @@ async def lifespan(app: FastAPI):
 
     yield
 
-app = FastAPI(lifespan=lifespan, title="Metro API") 
 
-from fastapi.middleware.cors import CORSMiddleware
+app = FastAPI(lifespan=lifespan, title="Metro API")
+
 
 origins = [
-    "http://localhost:5173",  
-    "http://localhost",       
+    "http://localhost:5173",
+    "http://localhost",
 ]
 
 app.add_middleware(

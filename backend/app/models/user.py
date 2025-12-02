@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Boolean, Column, Integer, String
+
 from app.core.db import Base
+
 
 class AdminUser(Base):
     __tablename__ = "admin_users"

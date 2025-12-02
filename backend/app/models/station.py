@@ -1,7 +1,10 @@
-from sqlalchemy import Column, Integer, String, Float, ARRAY, DECIMAL
+import decimal
+
+from sqlalchemy import ARRAY, DECIMAL, Column, Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.core.db import Base
-import decimal 
+
 
 class MetroStation(Base):
     __tablename__ = "metro_stations"
