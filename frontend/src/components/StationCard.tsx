@@ -20,10 +20,8 @@ interface StationCardProps {
 }
 
 const StationCard: React.FC<StationCardProps> = ({ station }) => {
-  // Форматируем координаты для отображения
   const [lon, lat] = station.coordinates;
 
-  // Вычисляем суммарный вход/выход для краткого отображения
   const totalEntrance = (
     station.entrance_cnt_7 +
     station.entrance_cnt_8 +
@@ -57,10 +55,6 @@ const StationCard: React.FC<StationCardProps> = ({ station }) => {
             <span className="font-semibold">Координаты:</span> <br />
             {lon} {lat}
           </p>
-          {/* <p>
-            <span className="font-semibold">Тип геометрии:</span> {station.geometry_type}
-          </p> */}
-          {/* <Separator className="my-3" /> */}
 
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">

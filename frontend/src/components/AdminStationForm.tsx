@@ -192,7 +192,6 @@ const AdminStationForm: React.FC<Props> = ({
         </DialogHeader>
 
         <div className="grid gap-5 py-2">
-          {/* Базовая информация */}
           <div className="grid gap-3">
             <div>
               <Label>ID станции</Label>
@@ -251,11 +250,9 @@ const AdminStationForm: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* Блоки входов/выходов */}
           {renderNumberGroup("Входы", entranceKeys)}
           {renderNumberGroup("Выходы", exitKeys)}
 
-          {/* Кнопка */}
           <Button onClick={handleSubmit} className="w-full mt-4">
             {isEditing ? "Сохранить изменения" : "Создать станцию"}
           </Button>

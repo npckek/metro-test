@@ -15,10 +15,8 @@ const LoginPage: React.FC = () => {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // Если уже аутентифицирован, сразу перенаправляем на дашборд
   useEffect(() => {
     if (isAuthenticated) {
-      // Вызываем navigate только после того, как компонент отрендерился
       navigate("/admin/dashboard", { replace: true });
     }
   }, [isAuthenticated, navigate]);

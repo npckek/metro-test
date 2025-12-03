@@ -5,7 +5,6 @@ import LoginPage from "./pages/LoginPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Ленивая загрузка админ-панели
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 
 function App() {
