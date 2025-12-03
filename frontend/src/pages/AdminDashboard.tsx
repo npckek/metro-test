@@ -9,14 +9,21 @@ const AdminDashboardPage: React.FC = () => {
 
   return (
     <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <h1 className="text-3xl font-bold">Панель Администратора</h1>
 
-        <div className="flex gap-3">
-          <Link to="/">
-            <Button variant="secondary">Перейти на витрину</Button>
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <Link to="/" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto" variant="secondary">
+              Перейти на витрину
+            </Button>
           </Link>
-          <Button variant="destructive" onClick={logout}>
+
+          <Button
+            className="w-full sm:w-auto"
+            variant="destructive"
+            onClick={logout}
+          >
             Выйти
           </Button>
         </div>
